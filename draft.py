@@ -6,9 +6,8 @@ app = Flask(__name__)
 def get_user_info(username):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
-    # Vulnerable: unsanitized input directly in query string
-    query = f"SELECT * FROM users WHERE username = '{username}'"
-    cursor.execute(query)
+    # Secure: use parameterized query to avoid injection
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
     result = cursor.fetchall()
     conn.close()
     return result
